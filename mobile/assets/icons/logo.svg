@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background Shield / Rounded Shape -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#bgGrad)" filter="url(#shadow)"/>
+
+  <!-- Architectural Geometric Building Towers -->
+  <!-- Left Tower -->
+  <path d="M 148 200 L 216 200 L 216 376 L 148 376 Z" fill="#FFFFFF" fill-opacity="0.88" rx="8"/>
+  <rect x="168" y="224" width="28" height="20" rx="4" fill="#2563EB"/>
+  <rect x="168" y="260" width="28" height="20" rx="4" fill="#2563EB"/>
+  <rect x="168" y="296" width="28" height="20" rx="4" fill="#2563EB"/>
+  <rect x="168" y="332" width="28" height="20" rx="4" fill="#2563EB"/>
+
+  <!-- Central Tall Residence Tower with Pin Silhouette Top -->
+  <path d="M 228 140 C 228 132 234 126 242 126 L 270 126 C 278 126 284 132 284 140 L 284 376 L 228 376 Z" fill="#FFFFFF" rx="8"/>
+  <rect x="246" y="152" width="20" height="20" rx="4" fill="#14B8A6"/>
+  <rect x="246" y="188" width="20" height="20" rx="4" fill="#2563EB"/>
+  <rect x="246" y="224" width="20" height="20" rx="4" fill="#2563EB"/>
+  <rect x="246" y="260" width="20" height="20" rx="4" fill="#2563EB"/>
+  <rect x="246" y="296" width="20" height="20" rx="4" fill="#2563EB"/>
+  <rect x="246" y="332" width="20" height="20" rx="4" fill="#2563EB"/>
+
+  <!-- Right Tower -->
+  <path d="M 296 230 L 364 230 L 364 376 L 296 376 Z" fill="#FFFFFF" fill-opacity="0.92" rx="8"/>
+  <rect x="316" y="254" width="28" height="20" rx="4" fill="#2563EB"/>
+  <rect x="316" y="290" width="28" height="20" rx="4" fill="#2563EB"/>
+  <rect x="316" y="326" width="28" height="20" rx="4" fill="#2563EB"/>
+
+  <!-- Ground Accent Line -->
+  <rect x="120" y="386" width="272" height="12" rx="6" fill="url(#accentGrad)"/>
+
+  <!-- Communication / Connection Badge (Location Pin + Pulse) -->
+  <circle cx="366" cy="144" r="48" fill="url(#accentGrad)" filter="url(#shadow)"/>
+  <!-- Bell / Signal Icon Inside Badge -->
+  <path d="M 366 122 C 356 122 348 130 348 140 C 348 152 342 156 342 158 L 390 158 C 390 156 384 152 384 140 C 384 130 376 122 366 122 Z" fill="#FFFFFF"/>
+  <circle cx="366" cy="164" r="4" fill="#FFFFFF"/>
+</svg>

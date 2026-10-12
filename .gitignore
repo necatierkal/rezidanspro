@@ -1,0 +1,42 @@
+# Flutter / Dart
+**/build/
+**/.dart_tool/
+**/.packages
+**/pubspec.lock
+
+# Android
+**/android/.gradle/
+**/android/local.properties
+**/android/app/release/
+**/*.keystore
+**/android/key.properties
+*.apk
+**/*.apk
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+
+# Python venv
+backend/venv/
+**/__pycache__/
+*.pyc
+
+# DB & secrets
+backend/*.db
+*.sqlite3
+*.db
+*.env
+.env
+
+# Pytest & Tests
+**/.pytest_cache/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.iml

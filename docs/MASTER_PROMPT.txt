@@ -1,0 +1,1743 @@
+ANTIGRAVITY MASTER DEVELOPMENT PROMPT
+Proje: RezidansPro — Apartman, Site ve Rezidans Yönetim Uygulaması
+Sen kıdemli bir Flutter mobil uygulama geliştiricisi, Python/FastAPI backend geliştiricisi, PostgreSQL uzmanı, UX/UI tasarımcısı, güvenlik mühendisi ve Google Play Store yayınlama süreçlerine hakim bir ürün geliştiricisisin.
+Bu projeyi basit bir demo veya CRUD uygulaması olarak değil, gerçek kullanıcıların Google Play Store üzerinden indirip kullanabileceği profesyonel bir mobil uygulama olarak geliştir.
+==================================================
+ÜRÜNÜN TEMEL FİKRİ
+==================================================
+RezidansPro ;
+apartman
+site
+rezidans
+toplu konut
+küçük konut kompleksleri
+için iletişim, duyuru, arıza bildirimi, toplantı, anket, aidat bilgilendirme ve yönetici-sakin iletişimini tek uygulamada birleştiren mobil platformdur.
+Uygulamanın en önemli prensibi:
+YÖNETİCİ VE SAKİN AYRIMI.
+Her kullanıcı aynı bilgileri göremez.
+Özellikle:
+AİDAT BORCU
+bilgisi kesinlikle diğer sakinlere gösterilmeyecek.
+Bir kişinin aidat borcu:
+ana sayfada
+apartman duyurularında
+komşular ekranında
+grup mesajlarında
+herkese açık bildirimlerde
+görünmeyecek.
+Sadece:
+ilgili sakin
+yetkili yönetici
+tarafından görülebilecek.
+==================================================
+2. UYGULAMA ADI
+Marka adı:
+RezidansPro 
+Türkçe ürün adı:
+RezidansPro 
+Alt slogan:
+"Binanızın iletişim merkezi."
+Alternatif slogan:
+"Binanız artık cebinizde."
+Ana mağaza adı:
+RezidansPro - Apartman & Site
+Kod içerisinde marka bilgilerini merkezi tut.
+Örneğin:
+AppConfig.appName
+AppConfig.tagline
+AppConfig.supportEmail
+AppConfig.websiteUrl
+AppConfig.primaryColor
+==================================================
+3. LOGO
+Modern ve güven veren bir logo tasarla.
+Logo konsepti:
+Bir apartman silüeti + konum pini + iletişim/bildirim hissi.
+Logo:
+sade
+geometrik
+küçük boyutta anlaşılabilir
+uygulama ikonunda tek başına kullanılabilir
+olmalı.
+Logo içerisinde çok fazla detay kullanma.
+Ana renk:
+#2563EB
+İkincil:
+#14B8A6
+Koyu:
+#0F172A
+Arka plan:
+#F8FAFC
+Uyarı:
+#F59E0B
+Hata:
+#DC2626
+Başarı:
+#16A34A
+Tüm renkleri:
+AppColors
+içerisinde merkezi tanımla.
+Logo SVG olarak oluştur.
+Android launcher icon için adaptive icon oluştur.
+Play Store icon:
+1024x1024
+formatında hazırlanabilecek yapıda olmalı.
+==================================================
+4. ÜRÜN KİMLİĞİ
+RezidansPro bir:
+"Sosyal medya"
+değildir.
+Bir:
+"apartman yönetim uygulaması"
+dır.
+Bu nedenle:
+gereksiz sosyal özellik
+herkese açık profil
+takip sistemi
+beğeni sayıları
+sosyal medya akışı
+oluşturma.
+Ana amaç:
+Yönetici ↔ Sakin
+iletişimini kolaylaştırmak.
+==================================================
+5. TEKNİK MİMARİ
+MOBILE:
+Flutter
+Dart
+Material 3
+BACKEND:
+Python
+FastAPI
+DATABASE:
+PostgreSQL
+Development:
+SQLite opsiyonel olabilir.
+ORM:
+SQLAlchemy 2.x
+Migration:
+Alembic
+Authentication:
+JWT Access Token
++
+Refresh Token
+Password hashing:
+Argon2 veya bcrypt.
+==================================================
+6. PROJE DİZİNİ
+Root:
+rezidanspro /
+mobile/ lib/ core/ config/ theme/ routing/ models/ services/ repositories/ providers/ utils/ features/ auth/ onboarding/ home/ announcements/ maintenance/ dues/ meetings/ polls/ messages/ building/ profile/ notifications/ settings/ widgets/ assets/ images/ icons/ l10n/ test/ backend/ app/ main.py core/ config/ db/ auth/ users/ buildings/ residents/ announcements/ maintenance/ dues/ meetings/ polls/ messages/ notifications/ models/ schemas/ services/ repositories/ tests/ alembic/ requirements.txt docs/ architecture.md api.md database.md security.md deployment.md .env.example README.md
+==================================================
+7. KULLANICI ROLLERİ
+Temel roller:
+RESIDENT
+Yönetici olmayan sakin.
+MANAGER
+Apartman/site yöneticisi.
+ASSISTANT_MANAGER
+Yönetici yardımcısı.
+SUPER_ADMIN
+Sadece sistem yönetimi için.
+Her endpoint role-based authorization kullanmalı.
+Frontend'de butonu gizlemek yeterli değildir.
+Backend mutlaka authorization kontrolü yapmalıdır.
+==================================================
+8. BİNA / SİTE MODELİ
+Bir kullanıcı bir veya daha fazla binaya/siteye bağlı olabilir.
+Temel yapı:
+Organization / Community
+Building
+Block
+Apartment
+User
+ResidentMembership
+Örneğin:
+Gül Sitesi
+A Blok
+B Blok
+C Blok
+A Blok:
+101
+102
+103
+104
+Kullanıcı:
+Necati Erkal
+A Blok
+Daire 103
+==================================================
+9. VERİTABANI
+users
+id
+uuid
+email
+phone
+password_hash
+first_name
+last_name
+avatar_url
+created_at
+updated_at
+is_active
+communities
+id
+name
+type
+address
+city
+district
+created_at
+updated_at
+community_members
+id
+community_id
+user_id
+role
+status
+joined_at
+blocks
+id
+community_id
+name
+apartments
+id
+block_id
+apartment_no
+floor
+type
+apartment_members
+id
+apartment_id
+user_id
+is_owner
+is_primary_resident
+joined_at
+announcements
+id
+community_id
+author_id
+title
+body
+priority
+published_at
+expires_at
+created_at
+updated_at
+maintenance_requests
+id
+community_id
+apartment_id
+reported_by
+category
+title
+description
+status
+priority
+created_at
+updated_at
+resolved_at
+maintenance_comments
+id
+request_id
+author_id
+body
+created_at
+meetings
+id
+community_id
+title
+description
+location
+start_at
+end_at
+created_by
+created_at
+polls
+id
+community_id
+title
+description
+start_at
+end_at
+created_by
+status
+poll_options
+id
+poll_id
+label
+poll_votes
+id
+poll_id
+option_id
+user_id
+created_at
+dues
+id
+community_id
+apartment_id
+period
+amount
+due_date
+status
+created_at
+updated_at
+dues_payments
+id
+due_id
+amount
+paid_at
+payment_method
+reference
+private_messages
+id
+community_id
+sender_id
+receiver_id
+subject
+body
+created_at
+read_at
+notifications
+id
+user_id
+type
+title
+body
+is_read
+created_at
+devices
+id
+user_id
+platform
+push_token
+created_at
+updated_at
+==================================================
+10. AİDAT GÜVENLİĞİ
+BU KISIM ÇOK ÖNEMLİ.
+Aidat bilgileri community seviyesinde herkese açık veri değildir.
+Örneğin:
+Ali'nin 1.250 TL borcu varsa:
+Ali görebilir.
+Yetkili yönetici görebilir.
+Mehmet göremez.
+Ayşe göremez.
+Diğer sakinler göremez.
+Duyuru ekranında görünmez.
+Apartman ana sayfasında görünmez.
+Toplu bildirimde görünmez.
+Push notification içinde:
+"Ali'nin 1.250 TL aidat borcu..."
+gibi veri kesinlikle bulunamaz.
+Bunun yerine Ali'nin kendi telefonuna:
+"Ödenmemiş aidatınız bulunmaktadır."
+gönderilebilir.
+Tutar yalnızca güvenli, authenticated kullanıcı ekranında gösterilir.
+==================================================
+11. YÖNETİCİ PANELİ
+Mobil uygulama içerisinde role göre yönetici paneli oluştur.
+Normal sakin:
+Yönetici panelini görmez.
+Yönetici:
+"Yönetim"
+menüsünü görür.
+Dashboard:
+TOPLAM DAİRE
+48
+AKTİF SAKİN
+112
+AÇIK ARIZA
+7
+BEKLEYEN TALEP
+4
+TOPLAM AİDAT
+...
+Ancak aidat detayları yalnızca yönetici yetkisi olan kullanıcıya gösterilir.
+==================================================
+12. YÖNETİCİ ANA SAYFASI
+Yönetici Dashboard:
+"Bugün"
+Bölümleri:
+📢 Duyurular
+🔧 Açık Arızalar
+💰 Aidatlar
+📅 Yaklaşan Toplantılar
+📊 Aktif Anketler
+👥 Sakinler
+Hızlı işlemler:
+Duyuru
+Arıza
+Toplantı
+Anket
+Aidat
+==================================================
+13. SAKİN ANA SAYFASI
+Sakin ana sayfası:
+"Merhaba Necati 👋"
+"Gül Sitesi · A Blok · Daire 103"
+Büyük kart:
+SON DUYURU
+"Asansör bakım çalışması"
+14:00 - 16:00
+Altında:
+🔧 Açık arızalarım
+📅 Yaklaşan toplantı
+📊 Aktif anket
+💳 Aidat durumum
+Aidat kartı:
+"Bu ayki aidat"
+veya:
+"Ödenmemiş aidatınız bulunuyor."
+Ancak başka sakinlerin hiçbir finansal bilgisi burada görünmez.
+==================================================
+14. DUYURULAR
+Yönetici duyuru oluşturabilir.
+Alanlar:
+Başlık
+Açıklama
+Ek dosya
+Fotoğraf
+Öncelik
+Yayın tarihi
+Bitiş tarihi
+Örnek:
+"Su deposu bakımı"
+"14 Ekim Çarşamba günü 10:00-13:00 arasında su deposu bakımı yapılacaktır."
+Öncelik:
+Normal
+Önemli
+Acil
+Acil duyurular ana ekranda belirgin gösterilebilir.
+==================================================
+15. DUYURU BİLDİRİMLERİ
+Yeni duyuru yayınlandığında sakinlere push notification gönder.
+Örneğin:
+"Yeni duyuru"
+"Su deposu bakımı 14 Ekim tarihinde yapılacaktır."
+Aidat gibi özel bilgileri toplu notification içine koyma.
+==================================================
+16. ARIZA BİLDİRME
+Sakin:
+"Arıza Bildir"
+seçeneğine basar.
+Kategori:
+Asansör
+Su
+Elektrik
+Aydınlatma
+Kapı
+Otopark
+Bahçe
+Isıtma
+Temizlik
+Güvenlik
+Diğer
+Fotoğraf ekleyebilir.
+Başlık:
+"Asansör çalışmıyor"
+Açıklama:
+"3. katta durmuyor."
+Gönder.
+==================================================
+17. ARIZA DURUMLARI
+Durumlar:
+OPEN
+IN_PROGRESS
+WAITING
+RESOLVED
+CLOSED
+Sakin kendi oluşturduğu arızanın durumunu görebilir.
+Örnek:
+🔴 Açık
+🟠 İşlemde
+🟡 Beklemede
+🟢 Çözüldü
+==================================================
+18. ARIZA GİZLİLİĞİ
+Varsayılan olarak sakinlerin kişisel arıza kayıtları birbirlerine gösterilmez.
+Bir sakin:
+"Benim bildirdiğim arızalar"
+ekranını görür.
+Yönetici tüm arızaları görür.
+Yönetici isterse belirli bir arızayı duyuruya dönüştürebilir.
+==================================================
+19. TOPLANTI MODÜLÜ
+Yönetici:
+"Toplantı oluştur"
+alanları:
+Başlık
+Tarih
+Saat
+Konum
+Açıklama
+Örnek:
+"Kat Malikleri Toplantısı"
+15 Ekim 2026
+19:30
+Apartman toplantı salonu
+Sakinler:
+"Katılacağım"
+veya
+"Katılamayacağım"
+seçebilir.
+==================================================
+20. ANKET MODÜLÜ
+Yönetici anket oluşturabilir.
+Örnek:
+"Bahçe düzenlemesi için hangi seçenek tercih ediliyor?"
+A:
+Çim alan
+B:
+Çocuk oyun alanı
+C:
+Otopark
+Oy kullanma:
+Bir kullanıcı bir ankete bir kez oy verebilir.
+Oylar backend'de kontrol edilmeli.
+==================================================
+21. ANKET GİZLİLİĞİ
+Anket tipleri:
+PUBLIC_RESULT
+Yönetici ve sakinler sonuçları görebilir.
+PRIVATE_RESULT
+Sadece yönetici sonuçları görebilir.
+Oyların kişiyle eşleşip eşleşmediği ayarlanabilir.
+Varsayılan:
+Sakinler toplam sonucu görür.
+Bireysel oy tercihi görünmez.
+==================================================
+22. AİDAT MODÜLÜ
+Yönetici:
+Daire bazında aidat tanımlayabilir.
+Örneğin:
+A Blok
+Daire 103
+Ekim 2026
+Aidat:
+2.500 TL
+Son ödeme:
+10.10.2026
+Sakin:
+"Bu ay aidatınız: 2.500 TL"
+görür.
+Başka sakinlerin:
+daire numarası
+borç miktarı
+ödeme durumu
+gibi bilgilerini göremez.
+==================================================
+23. AİDAT DURUMU
+Durumlar:
+PAID
+UNPAID
+PARTIAL
+OVERDUE
+Sakin:
+"Ödendi"
+bilgisi görebilir.
+Yönetici:
+"Kimlerin aidatı ödenmedi?"
+raporunu görebilir.
+Bu rapor yalnızca yetkili yöneticiye gösterilir.
+==================================================
+24. ÖZEL YÖNETİCİ MESAJI
+BU ÖZELLİK UYGULAMANIN ÖNEMLİ FARKLARINDAN BİRİ.
+Yönetici bir sakine özel mesaj gönderebilir.
+Örneğin:
+Yönetici:
+"Merhaba Necati Bey,
+Ekim ayı aidat ödemeniz sistemimizde görünmemektedir.
+Lütfen kontrol ediniz."
+Bu mesaj:
+sadece Necati tarafından görülür.
+Diğer sakinler göremez.
+Apartman duyurusu değildir.
+Grup sohbeti değildir.
+==================================================
+25. YÖNETİCİ → SAKİN MESAJLAŞMASI
+Mesaj sistemi:
+Manager → Resident
+ve
+Resident → Manager
+şeklinde çalışabilir.
+Ancak ilk sürümde:
+SAKİN → SAKİN
+özelliği bulunmayacak.
+Böylece uygulama sosyal medya haline gelmeyecek.
+Özel mesajlar:
+aidat
+arıza
+belge
+yönetim
+kişisel bilgilendirme
+için kullanılabilir.
+==================================================
+26. MESAJ GİZLİLİĞİ
+Mesaj endpointlerinde:
+sender_id
+receiver_id
+authorization
+kontrolü zorunlu.
+Bir kullanıcı URL'deki message_id değerini değiştirerek başka bir kişinin mesajını görememeli.
+Backend ownership check:
+if message.receiver_id != current_user.id
+and message.sender_id != current_user.id:
+403 Forbidden
+==================================================
+27. PUSH NOTIFICATIONS
+Firebase Cloud Messaging veya uygun push notification sistemi kullan.
+Bildirim tipleri:
+ANNOUNCEMENT
+MAINTENANCE
+MEETING
+POLL
+PRIVATE_MESSAGE
+DUES_REMINDER
+IMPORTANT
+Özellikle DUES_REMINDER bildirimi:
+"Ödenmemiş aidatınız bulunmaktadır."
+şeklinde olabilir.
+Ancak:
+"2.500 TL borcunuz var"
+gibi finansal detayları lock screen üzerinde varsayılan olarak gösterme.
+==================================================
+28. DAİRE DOĞRULAMA
+Kullanıcı kayıt olduktan sonra:
+"Bir binaya katıl"
+ekranı.
+Yöntemler:
+Davet kodu
+QR kod
+Yönetici onayı
+Örnek:
+rezidanspro-82K9
+Kullanıcı kodu girer.
+A Blok
+Daire 103
+seçer.
+Yönetici onaylarsa üyelik aktifleşir.
+==================================================
+29. QR KOD
+Yönetici:
+"Katılım QR kodu oluştur"
+der.
+QR:
+Gül Sitesi
+A Blok
+için oluşturulur.
+Kullanıcı QR kodu tarar.
+Apartman/site bilgisi otomatik gelir.
+Ancak QR tek başına kullanıcıya otomatik yetki vermemeli.
+Gerekirse yönetici onayı alınmalı.
+==================================================
+30. SAKİN PROFİLİ
+Kullanıcı:
+Ad
+Soyad
+Telefon
+E-posta
+görebilir.
+Apartman bilgisi:
+Site
+Blok
+Daire
+Yetkisine göre:
+Yönetici
+Sakin
+göster.
+Diğer sakinlerin kişisel bilgileri gereksiz yere gösterilmez.
+==================================================
+31. KOMŞULAR EKRANI
+Bu ekran opsiyonel ve privacy-first olacak.
+Varsayılan olarak:
+Sakinlerin telefon numaralarını listeleme.
+Sadece:
+"Topluluk üyeleri"
+gibi isim bazlı minimal görünüm kullanılabilir.
+Kullanıcı profilinde:
+Telefon
+Email
+varsayılan olarak gizli.
+Kullanıcı isterse iletişim bilgilerinin görünürlüğünü ayarlayabilir.
+==================================================
+32. APARTMAN / SİTE BİLGİLERİ
+"Binamız"
+ekranı:
+Site adı
+Adres
+Yönetici
+Acil iletişim
+Ortak alanlar
+Kurallar
+Örneğin:
+🏢 Gül Sitesi
+📍 Ankara / Çankaya
+👤 Yönetici
+📞 Acil iletişim
+==================================================
+33. ACİL NUMARALAR
+Uygulamada:
+112
+110
+155
+156
+gibi kamu numaralarını sabit kodlamak yerine resmi ve güncel yapılandırma üzerinden yönet.
+Türkiye için güncel ana acil numara olarak 112 gibi bilgileri kullanıcıya sunarken yanlış yönlendirme oluşturma.
+Bina özel numaraları:
+Elektrik
+Su
+Doğalgaz
+Güvenlik
+Asansör servisi
+eklenebilir.
+==================================================
+34. BİNA KURALLARI
+Yönetici:
+"Site Kuralları"
+ekleyebilir.
+Örneğin:
+Sessizlik:
+23:00 - 08:00
+Otopark:
+Misafir otoparkı...
+Evcil hayvan...
+Ortak alan...
+Bu bölüm sakinler için salt okunur olabilir.
+==================================================
+35. DOSYA / BELGE MODÜLÜ
+İleride kullanılmak üzere mimari hazırla.
+Yönetici:
+toplantı tutanağı
+yönetim planı
+duyuru PDF'i
+karar belgesi
+yükleyebilir.
+Sakin:
+"Belgeler"
+ekranından yetkisi dahilindeki belgeleri görebilir.
+==================================================
+36. YÖNETİCİ İÇİN RAPORLAR
+Yönetici:
+Aidat raporu
+Arıza raporu
+Duyuru raporu
+Toplantı katılım raporu
+Anket sonuçları
+görebilir.
+Örneğin:
+Ekim 2026
+Toplam daire: 48
+Ödenen: 41
+Bekleyen: 5
+Kısmi: 2
+Bu ekran kesinlikle resident rolüne açılmamalı.
+==================================================
+37. VERİ ERİŞİM KURALI
+Backend'de tüm sorgular:
+community_id
+ve kullanıcı yetkisi
+ile filtrelenmeli.
+Örneğin:
+GET /api/dues
+isteğinde normal sakin:
+SADECE kendi apartment_id
+ile ilişkili kayıtları almalı.
+Yönetici:
+sadece yönettiği community kayıtlarını almalı.
+Bir kullanıcı başka community_id göndererek başka site verisini çekememeli.
+==================================================
+38. MULTI-TENANT GÜVENLİK
+RezidansPro multi-tenant tasarlanmalı.
+Her community ayrı veri alanı gibi düşünülmeli.
+Kritik güvenlik:
+User A
+Community A
+verisini görür.
+Community B verisini göremez.
+API:
+community_id
+parametresine körü körüne güvenme.
+Backend membership doğrulaması yap.
+==================================================
+39. ANA NAVİGASYON
+Resident:
+🏠 Ana Sayfa
+📢 Duyurular
+🔧 Arızalar
+📅 Takvim
+👤 Profil
+Manager:
+🏠 Ana Sayfa
+📢 Duyurular
+🔧 Arızalar
+👥 Yönetim
+👤 Profil
+Yönetim altında:
+Aidatlar
+Sakinler
+Toplantılar
+Anketler
+Raporlar
+Mesajlar
+Bina Ayarları
+==================================================
+40. TASARIM
+Material 3 kullan.
+Ama varsayılan Flutter görünümü oluşturma.
+Modern SaaS/mobile productivity uygulaması hissi oluştur.
+Kartlar:
+rounded corners
+12-16 px.
+Yumuşak shadow.
+Aşırı gölge kullanma.
+Typography:
+Başlık:
+24-28
+Section:
+18-20
+Body:
+14-16
+Caption:
+12-13
+==================================================
+41. RENK KODLAMASI
+Duyuru:
+Blue
+Önemli:
+Orange
+Acil:
+Red
+Çözüldü:
+Green
+Beklemede:
+Yellow
+Aidat:
+Purple/Blue
+Ama sadece renk kullanma.
+İkon + text + renk birlikte kullan.
+==================================================
+42. DARK MODE
+Dark mode destekle.
+Dark:
+#0F172A
+Surface:
+#1E293B
+Text:
+#F8FAFC
+Secondary:
+#94A3B8
+==================================================
+43. ONBOARDING
+İlk açılış:
+"RezidansPro'ya hoş geldin."
+"Binanızın iletişim merkezi."
+"Binanı bul."
+Davet kodu
+veya
+QR kod
+"Daireni doğrula."
+"Başlayalım."
+Uzun kayıt formu oluşturma.
+==================================================
+44. AUTH
+Register:
+Ad
+Soyad
+Email
+Telefon
+Şifre
+Login:
+Email
+Şifre
+Forgot Password.
+Account deletion.
+Logout.
+Token refresh.
+==================================================
+45. OFFLINE-FIRST
+Aşağıdaki özellikler offline görüntülenebilmeli:
+daha önce yüklenen duyurular
+bina bilgileri
+kendi arızaları
+yaklaşan toplantılar
+Ancak:
+Aidat ödeme/borç durumu gibi kritik finansal bilgiler offline cache konusunda dikkatli ele alınmalı.
+Eski finansal verileri gereksiz yere cihazda tutma.
+Logout olduğunda hassas local cache temizlenmeli.
+==================================================
+46. LOCAL DATABASE
+Flutter tarafında:
+Drift / SQLite
+kullanılabilir.
+Cache:
+Announcements
+Meetings
+Maintenance
+için.
+Private messages ve dues gibi hassas veriler için minimum cache.
+==================================================
+47. API
+Auth:
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/forgot-password
+POST /api/auth/reset-password
+Community:
+GET /api/communities
+GET /api/communities/{id}
+POST /api/communities/join
+POST /api/communities/create
+Announcements:
+GET /api/announcements
+POST /api/announcements
+PUT /api/announcements/{id}
+DELETE /api/announcements/{id}
+Maintenance:
+GET /api/maintenance
+POST /api/maintenance
+GET /api/maintenance/{id}
+PUT /api/maintenance/{id}
+Meetings:
+GET /api/meetings
+POST /api/meetings
+Polls:
+GET /api/polls
+POST /api/polls
+POST /api/polls/{id}/vote
+Dues:
+GET /api/my/dues
+Manager:
+GET /api/manager/dues
+GET /api/manager/residents
+GET /api/manager/reports
+Messages:
+GET /api/messages
+POST /api/messages
+GET /api/messages/{id}
+PUT /api/messages/{id}/read
+Notifications:
+GET /api/notifications
+PUT /api/notifications/{id}/read
+==================================================
+48. API GÜVENLİĞİ
+Frontend'e güvenme.
+Her endpoint:
+Authentication
+Authorization
+Ownership
+Tenant membership
+kontrollerini yapmalı.
+Örneğin:
+GET /api/dues/123
+kullanıcıya 123 numaralı aidat kaydının sahibi olup olmadığı kontrol edilmeden dönmemeli.
+Manager endpointleri:
+role == MANAGER
+ve
+community membership
+kontrol etmeli.
+==================================================
+49. RATE LIMITING
+Özellikle:
+Login
+Register
+Forgot Password
+Join Community
+Private Message
+Vote
+endpointlerine rate limit ekle.
+==================================================
+50. INPUT VALIDATION
+Pydantic modelleri kullan.
+Dosya yüklemelerinde:
+MIME type
+extension
+size
+kontrolü yap.
+Kullanıcıdan gelen HTML'i doğrudan render etme.
+XSS riskini azalt.
+==================================================
+51. DOSYA YÜKLEME
+İlk sürümde local storage veya S3-compatible storage abstraction kullan.
+Kodda:
+StorageService
+oluştur.
+İleride:
+AWS S3
+MinIO
+Azure Blob
+gibi sistemlere geçilebilsin.
+Dosya URL'lerini veritabanında güvenli şekilde tut.
+==================================================
+52. PUSH NOTIFICATION
+FCM kullan.
+Device token tablosu oluştur.
+Kullanıcı logout olduğunda token yönetimi yapılmalı.
+Bildirim türleri:
+Yeni duyuru
+Arıza durumu değişti
+Toplantı hatırlatması
+Anket
+Özel mesaj
+Aidat hatırlatması
+==================================================
+53. AİDAT BİLDİRİM GİZLİLİĞİ
+Lock screen:
+"Yeni bir aidat bildiriminiz var."
+veya:
+"Aidat durumunuzla ilgili yeni bir bildirim var."
+göster.
+Tutarı lock screen'de gösterme.
+Kullanıcı uygulamayı açıp authenticate olduğunda detay görür.
+==================================================
+54. YÖNETİCİ MESAJLARI
+Manager mesaj ekranı:
+Sakin seç.
+Mesaj yaz.
+Gönder.
+Örnek:
+"Merhaba,
+Ekim ayı aidat ödemenizin henüz sisteme işlenmediğini görüyoruz. Lütfen kontrol eder misiniz?"
+Bu mesaj sadece ilgili sakin ve yönetici tarafından görülebilir.
+==================================================
+55. MESAJLARDA KİŞİSEL VERİ
+Mesajlarda:
+TC kimlik
+banka hesabı
+kredi kartı
+şifre
+hassas kişisel bilgi
+istenmemeli.
+Uygulama kullanıcıları bu konuda bilgilendirilebilir.
+==================================================
+56. ÖDEME SİSTEMİ
+V1'DE GERÇEK PARA ÖDEME SİSTEMİ EKLEME.
+Ancak mimariyi hazırlayıp:
+PaymentService
+interface oluştur.
+İleride:
+iyzico
+PayTR
+banka entegrasyonu
+başka ödeme sağlayıcıları
+eklenebilsin.
+Gerçek ödeme entegrasyonu eklenmeden:
+"Ödendi olarak işaretle"
+özelliğini yalnızca yönetici kullanabilir.
+Sakin kendi aidatını tek taraflı olarak "ödendi" yapamaz.
+==================================================
+57. PREMIUM
+İlk sürüm:
+FREE.
+İleride yönetici için:
+PRO / PREMIUM
+planları oluşturulabilir.
+Örneğin:
+FREE:
+1 bina
+50 daire
+temel duyuru
+temel arıza
+PRO:
+sınırsız daire
+aidat yönetimi
+raporlar
+belgeler
+gelişmiş anket
+yönetici mesajları
+yedekleme
+Bu sistem feature flag ile hazırlanmalı.
+==================================================
+58. İSTATİSTİK
+Yönetici:
+Toplam daire
+Aktif sakin
+Açık arıza
+Çözülen arıza
+Aidat tahsilat oranı
+Toplantı katılımı
+Anket katılımı
+görebilir.
+Sakin:
+Sadece kendisine ait istatistikleri görebilir.
+==================================================
+59. SEARCH
+Yönetici:
+Sakin arayabilir.
+Daire arayabilir.
+Arıza arayabilir.
+Duyuru arayabilir.
+Sakin:
+Sadece kendi erişebildiği içerikleri arayabilir.
+==================================================
+60. SORT / FILTER
+Arızalar:
+Durum
+Öncelik
+Tarih
+Kategori
+ile filtrelenebilir.
+Aidatlar:
+Dönem
+Durum
+Blok
+Daire
+ile yönetici tarafından filtrelenebilir.
+==================================================
+61. EMPTY STATES
+Duyuru yok:
+"Henüz duyuru bulunmuyor."
+Arıza yok:
+"Harika! Açık bir arıza bulunmuyor."
+Aidat:
+"Bu döneme ait aidat kaydınız bulunmuyor."
+Mesaj:
+"Henüz özel mesajınız yok."
+==================================================
+62. ERROR STATES
+Kullanıcıya teknik exception gösterme.
+Örneğin:
+"AxiosError 500"
+gösterme.
+Bunun yerine:
+"Bir sorun oluştu. Lütfen tekrar deneyin."
+Backend loglarında gerçek hata bulunmalı.
+==================================================
+63. LOCALIZATION
+İlk dil:
+Türkçe
+İkinci:
+English
+Tüm UI stringlerini localization üzerinden yönet.
+Hard-coded metin kullanma.
+==================================================
+64. TARİH / SAAT
+Türkiye:
+03.10.2026
+19:30
+gösterimi.
+Backend timezone-aware datetime kullanmalı.
+Kullanıcıya UTC gösterme.
+==================================================
+65. ACCOUNT DELETION
+Google Play politikaları açısından uygulama içerisinde:
+"Hesabımı sil"
+özelliği bulunmalı.
+Silme süreci:
+Kullanıcı bilgilendirilir.
+Onay istenir.
+Gerekli kullanıcı verileri silinir veya anonimleştirilir.
+Kullanıcının community üyeliği kaldırılır.
+Yönetici hesabı için:
+"Önce başka yönetici ata"
+gibi güvenli workflow oluştur.
+==================================================
+66. PRIVACY
+Privacy-by-design.
+Minimum veri topla.
+Gereksiz kişisel bilgi isteme.
+Sakinlerin bilgilerini diğer sakinlere otomatik açma.
+Özellikle:
+Aidat
+Mesaj
+Telefon
+Email
+private kabul edilir.
+==================================================
+67. ADMIN LOG
+Yönetici işlemleri audit log'a yazılabilir:
+Duyuru oluşturdu
+Aidat oluşturdu
+Aidat güncelledi
+Mesaj gönderdi
+Arıza durumunu değiştirdi
+Ancak loglarda gereksiz kişisel finansal veri tutulmamalı.
+==================================================
+68. AUDIT LOG
+audit_logs
+id
+actor_user_id
+community_id
+action
+entity_type
+entity_id
+created_at
+Örneğin:
+MANAGER_UPDATED_DUE
+Ancak:
+"Ali'nin 2500 TL borcunu..."
+gibi gereksiz detayları loglama.
+==================================================
+69. TESTLER
+Backend testleri:
+Authentication
+Authorization
+Community isolation
+Manager access
+Resident access
+Dues privacy
+Message privacy
+Maintenance
+Poll voting
+Meeting
+Announcements
+Özellikle:
+RESIDENT A
+RESIDENT B'nin aidatını
+GET isteği ile alamamalı.
+Beklenen:
+403 veya 404.
+Aynı şekilde:
+RESIDENT A
+RESIDENT B'nin private message kaydını görememeli.
+==================================================
+70. SECURITY TEST SCENARIOS
+Test:
+User A community_id = 1
+User B community_id = 2
+User A:
+GET /api/communities/2
+yaparsa:
+403/404.
+User A:
+GET /api/dues/B_ID
+yaparsa:
+403/404.
+User A:
+GET /api/messages/B_MESSAGE
+yaparsa:
+403/404.
+User normal resident:
+POST /api/announcements
+yaparsa:
+User normal resident:
+GET /api/manager/dues
+yaparsa:
+Bu testler gerçek olarak yazılmalı.
+==================================================
+71. DEMO DATA
+Development ortamında:
+Gül Sitesi
+A Blok
+B Blok
+20 daire
+demo manager:
+[manager@rezidanspro.app](mailto:manager@rezidanspro.app)
+demo resident:
+[resident@rezidanspro.app](mailto:resident@rezidanspro.app)
+oluştur.
+Demo veriler:
+5 duyuru
+3 arıza
+2 toplantı
+2 anket
+aidat kayıtları
+özel mesaj örnekleri.
+Ancak production build'de demo credentials gösterme.
+==================================================
+72. PLAY STORE
+Package:
+com.rezidanspro.app
+Application name:
+RezidansPro 
+Version:
+1.0.0
+Release build çalışmalı.
+App icon.
+Splash.
+Privacy Policy.
+Terms of Service.
+Account deletion.
+Data safety formuna uygun veri mimarisi.
+Store screenshots.
+Feature graphic.
+==================================================
+73. PLAY STORE AÇIKLAMA
+Kısa açıklama:
+"Binanızın duyuru, arıza, toplantı ve iletişim işlemlerini tek yerden yönetin."
+Uzun açıklama için ayrı localization metni oluştur.
+Aşırı reklamcı dil kullanma.
+"En iyi", "1 numara" gibi doğrulanmamış iddialar kullanma.
+==================================================
+74. STORE SCREENSHOT SENARYOLARI
+Screenshot 1:
+RezidansPro 
+"Binanızın iletişim merkezi."
+Screenshot 2:
+"Önemli duyuruları kaçırmayın."
+Screenshot 3:
+"Arızayı birkaç saniyede bildirin."
+Screenshot 4:
+"Toplantıları ve anketleri takip edin."
+Screenshot 5:
+"Aidat bilgilerinizi güvenli şekilde takip edin."
+Screenshot 6:
+"Yöneticiyle özel iletişim kurun."
+==================================================
+75. UYGULAMA AKIŞI
+Yeni kullanıcı:
+Splash
+↓
+Onboarding
+↓
+Register/Login
+↓
+Bina katılım kodu
+↓
+Daire seçimi
+↓
+Yönetici onayı
+↓
+Ana Sayfa
+Sakin:
+Ana Sayfa
+↓
+Duyuru
+Arıza
+Toplantı
+Anket
+Aidatım
+Mesajlar
+Yönetici:
+Ana Sayfa
+↓
+Yönetim
+↓
+Duyuru
+Arıza
+Aidat
+Sakinler
+Toplantı
+Anket
+Mesaj
+Rapor
+==================================================
+76. YÖNETİCİ AİDAT WORKFLOW
+Yönetici:
+Aidatlar
+↓
+Ekim 2026
+↓
+A Blok
+↓
+103
+↓
+2.500 TL
+↓
+Son ödeme:
+10.10.2026
+↓
+Kaydet.
+Sakin:
+Aidatlarım
+↓
+Ekim 2026
+↓
+2.500 TL
+↓
+Ödenmemiş
+Başka sakin:
+BU KAYDI GÖREMEZ.
+==================================================
+77. YÖNETİCİ ÖZEL MESAJ WORKFLOW
+Yönetici:
+Mesajlar
+↓
+Yeni Mesaj
+↓
+Sakin seç:
+Necati Erkal
+↓
+Mesaj:
+"Ekim ayı aidat ödemenizin sisteme henüz işlenmediğini görüyoruz."
+↓
+Gönder
+Necati:
+Bildirim alır.
+Mesajlar:
+"Yönetim"
+↓
+Mesajı görür.
+Başka sakin:
+BU MESAJI GÖREMEZ.
+==================================================
+78. ARIZA WORKFLOW
+Sakin:
+Arızalar
+↓
+↓
+Asansör
+↓
+"Asansör çalışmıyor."
+↓
+Fotoğraf ekle
+↓
+Gönder
+Yönetici:
+Arızayı görür.
+↓
+İşlemde
+↓
+Çözüldü
+Sakin:
+Bildirim:
+"Arıza kaydınız çözüldü."
+==================================================
+79. ANKET WORKFLOW
+Yönetici:
+Yeni Anket
+↓
+"Bahçe düzenlemesi"
+↓
+3 seçenek
+↓
+Yayınla.
+Sakin:
+Anketi görür.
+↓
+Oy verir.
+↓
+"Yanıtınız kaydedildi."
+Aynı kullanıcı ikinci kez oy kullanamaz.
+==================================================
+80. TOPLANTI WORKFLOW
+Yönetici:
+Toplantı oluştur.
+↓
+15.10.2026
+↓
+19:30
+↓
+Toplantı Salonu
+↓
+Yayınla.
+Sakin:
+Bildirim.
+↓
+Katılacağım
+veya
+Katılamayacağım.
+==================================================
+81. TASARIM DETAYI
+Dashboard kartları:
+Duyuru:
+📢
+Arıza:
+🔧
+Toplantı:
+📅
+Anket:
+📊
+Aidat:
+💳
+Mesaj:
+✉️
+İkon + renk + metin kullan.
+Emoji yerine production'da Material Icons veya özel SVG ikonları tercih et.
+==================================================
+82. BOTTOM SHEET
+Hızlı işlem:
+bottom sheet:
+📢 Duyuru
+🔧 Arıza
+📅 Toplantı
+📊 Anket
+💳 Aidat
+✉️ Mesaj
+Resident için:
+Arıza
+gibi yetkisi olmayan seçenekler görünmesin.
+Ancak backend yine authorization yapmalı.
+==================================================
+83. PERFORMANS
+Lazy loading.
+Pagination.
+Cache.
+Gereksiz rebuild önleme.
+Listelerde:
+ListView.builder
+kullan.
+Büyük duyuru listelerinde pagination.
+==================================================
+84. BACKEND PERFORMANS
+SQLAlchemy querylerinde:
+N+1 query
+oluşturma.
+Gerekli ilişkileri eager loading ile doğru şekilde getir.
+Index:
+community_id
+user_id
+apartment_id
+created_at
+status
+due_date
+üzerinde uygun indexler oluştur.
+==================================================
+85. DATABASE CONSTRAINTS
+Unique:
+community membership
+apartment membership
+poll vote
+gibi alanlarda DB constraint oluştur.
+Örneğin:
+Bir kullanıcı aynı ankete iki kez oy verememeli.
+DB seviyesinde:
+UNIQUE(poll_id, user_id)
+==================================================
+86. BACKUP
+Backend backup mimarisini dokümante et.
+Production PostgreSQL backup önerisi:
+daily backup
+ve
+retention policy.
+Uygulama koduna gerçek backup credentials koyma.
+==================================================
+87. ENV
+.env.example:
+DATABASE_URL=
+JWT_SECRET=
+JWT_REFRESH_SECRET=
+FCM_PROJECT_ID=
+STORAGE_BUCKET=
+APP_ENV=
+CORS_ORIGINS=
+Secrets Git'e commit edilmemeli.
+==================================================
+88. README
+README:
+RezidansPro 
+Features
+Architecture
+Flutter setup
+Python setup
+PostgreSQL setup
+Environment
+Migration
+Run backend
+Run Flutter
+Tests
+Android build
+Release
+Security
+Privacy
+Deployment
+anlatmalı.
+==================================================
+89. DEVELOPMENT STRATEGY
+Projeyi aşamalı geliştir.
+PHASE 1
+Branding
+Logo
+Flutter UI
+Navigation
+Onboarding
+PHASE 2
+FastAPI
+PostgreSQL
+Auth
+PHASE 3
+Community
+Block
+Apartment
+Membership
+PHASE 4
+Announcements
+PHASE 5
+Maintenance
+PHASE 6
+Meetings
+PHASE 7
+Polls
+PHASE 8
+Private Messages
+PHASE 9
+Dues
+PHASE 10
+Manager Dashboard
+PHASE 11
+Notifications
+PHASE 12
+Offline/cache
+PHASE 13
+Security tests
+PHASE 14
+Play Store preparation
+==================================================
+90. ÖNCELİK
+Öncelik:
+SECURITY
+PRIVACY
+STABILITY
+UX
+PERFORMANCE
+FEATURES
+Özellikle aidat ve özel mesaj verilerinde:
+PRIVACY > CONVENIENCE
+==================================================
+91. İLK MILESTONE
+İlk çalışan milestone:
+Kullanıcı kayıt olur.
+↓
+Bina oluşturur veya katılır.
+↓
+Daire seçilir.
+↓
+Yönetici onayı.
+↓
+Ana ekran açılır.
+↓
+Yönetici duyuru oluşturur.
+↓
+Sakin duyuruyu görür.
+↓
+Sakin arıza bildirir.
+↓
+Yönetici arızayı görür.
+↓
+Yönetici arıza durumunu değiştirir.
+↓
+Sakin sonucu görür.
+Bu akış tamamen çalışmadan ileri özelliklere geçme.
+==================================================
+92. İKİNCİ MILESTONE
+Toplantı.
+Anket.
+Bildirim.
+Özel mesaj.
+Bu aşamada:
+Manager → Resident
+private messaging
+tamamen çalışmalı.
+==================================================
+93. ÜÇÜNCÜ MILESTONE
+Aidat sistemi.
+Manager:
+aidat oluşturur.
+Resident:
+sadece kendi aidatını görür.
+Manager:
+tüm dairelerin aidat durumunu görür.
+Resident A:
+Resident B'nin aidatını göremez.
+Bu security testleri yazılmadan milestone tamamlanmış sayılmayacak.
+==================================================
+94. DÖRDÜNCÜ MILESTONE
+Play Store release.
+Kontrol:
+Flutter release build
+APK
+AAB
+App icon
+Splash
+Privacy Policy
+Terms
+Account deletion
+Data Safety
+Screenshots
+Store description
+versioning
+tamamlanmalı.
+==================================================
+95. ANTIGRAVITY ÇALIŞMA KURALI
+Mevcut proje varsa önce incele.
+Kodu gereksiz yere silme.
+Mevcut çalışan özellikleri koru.
+Yeni özellik eklerken regression test yap.
+Her milestone sonrası:
+flutter analyze
+flutter test
+backend test
+build
+API smoke test
+çalıştır.
+Hata varsa düzeltmeden sonraki aşamaya geçme.
+==================================================
+96. SON KULLANICI DENEYİMİ
+Bir sakin uygulamayı açtığında 5 saniye içerisinde:
+önemli duyuruyu
+kendi arızasını
+yaklaşan toplantıyı
+kendi aidat durumunu
+görebilmeli.
+Bir yönetici uygulamayı açtığında:
+açık arızaları
+yeni talepleri
+aidat durumunu
+yaklaşan toplantıları
+görebilmeli.
+==================================================
+97. KRİTİK GİZLİLİK KURALI
+ASLA:
+"Ahmet'in aidatı ödenmedi."
+şeklinde ortak alanda bilgi gösterme.
+ASLA:
+"A Blok 103 numaralı dairenin 2.500 TL borcu var."
+gibi herkese açık bilgi gösterme.
+ASLA:
+push notification içerisinde başka bir sakinin finansal durumunu gösterme.
+ASLA:
+private message'ı community feed'e düşürme.
+ASLA:
+resident kullanıcıya manager endpointlerini açma.
+==================================================
+98. GELECEK AI MİMARİSİ
+V1'DE AI YOK.
+İleride:
+AI Yönetici Asistanı
+eklenebilir.
+Örneğin yönetici:
+"Bu ay en çok bildirilen arızaları özetle."
+AI:
+"Asansör 7 bildirimle ilk sırada..."
+gibi toplu ve anonimleştirilmiş analiz sunabilir.
+Başka örnek:
+"Bu ayki duyuruları özetle."
+Ancak AI:
+kişisel aidat borcu
+özel mesaj
+kişisel iletişim bilgileri
+gibi hassas verileri varsayılan olarak modele göndermemeli.
+==================================================
+99. SON ÜRÜN HEDEFİ
+RezidansPro 'nun sonunda kullanıcı şunu hissetmeli:
+"Yöneticimle iletişim kurmak için WhatsApp grubuna ihtiyacım yok."
+Yönetici şunu hissetmeli:
+"48 daireyi Excel ve WhatsApp üzerinden takip etmek zorunda değilim."
+Ürün:
+Basit.
+Güvenli.
+Modern.
+Hızlı.
+Privacy-first.
+olmalı.
+==================================================
+100. ANTIGRAVITY'YE SON TALİMAT
+Şimdi projeyi oluştur.
+Önce:
+klasör yapısını oluştur
+Flutter projesini oluştur
+FastAPI backend oluştur
+PostgreSQL modellerini oluştur
+Alembic migration oluştur
+Branding oluştur
+RezidansPro logosunu oluştur
+Material 3 theme oluştur
+Onboarding oluştur
+Authentication oluştur
+Sonra milestone sırasını takip et.
+Kod yazarken:
+production quality
+secure defaults
+modular architecture
+clean UI
+privacy-first
+testable code
+kullan.
+Bir özellik için gereksiz karmaşıklık oluşturma.
+Çalışan özelliği bozmadan ilerle.
+Her aşama sonunda yapılan değişiklikleri ve test sonuçlarını raporla.
+İlk hedef:
+GERÇEKTEN ÇALIŞAN BİR APARTMAN/SİTE YÖNETİM MVP'Sİ.
+==================================================
+END OF MASTER PROMPT
