@@ -9,6 +9,8 @@ class StorageService {
   static const String keySelectedCommunityId = 'rp_selected_community_id';
   static const String keyThemeMode = 'rp_theme_mode'; // light, dark, system
   static const String keyLanguage = 'rp_language'; // tr, en
+  static const String keyCustomServerUrl = 'rp_custom_server_url';
+  static const String keyIsDemoMode = 'rp_is_demo_mode';
 
   final SharedPreferences _prefs;
 
@@ -64,5 +66,20 @@ class StorageService {
   String get language => _prefs.getString(keyLanguage) ?? 'tr';
   Future<void> setLanguage(String lang) async {
     await _prefs.setString(keyLanguage, lang);
+  }
+
+  // Custom Server & Offline Demo
+  String? get customServerUrl => _prefs.getString(keyCustomServerUrl);
+  Future<void> setCustomServerUrl(String? url) async {
+    if (url == null || url.trim().isEmpty) {
+      await _prefs.remove(keyCustomServerUrl);
+    } else {
+      await _prefs.setString(keyCustomServerUrl, url.trim());
+    }
+  }
+
+  bool get isDemoMode => _prefs.getBool(keyIsDemoMode) ?? false;
+  Future<void> setIsDemoMode(bool isDemo) async {
+    await _prefs.setBool(keyIsDemoMode, isDemo);
   }
 }

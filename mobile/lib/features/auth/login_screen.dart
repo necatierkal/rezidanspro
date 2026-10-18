@@ -6,6 +6,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/community_provider.dart';
+import '../../core/services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,11 +28,86 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _fillDemo(String email, String password) {
-    setState(() {
-      _emailController.text = email;
-      _passwordController.text = password;
-    });
+
+  Future<void> _loginDemo(bool asManager) async {
+    final auth = context.read<AuthProvider>();
+    final success = await auth.loginDemo(asManager: asManager);
+
+    if (success && mounted) {
+      final commProvider = context.read<CommunityProvider>();
+      await commProvider.loadMyCommunities();
+
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    }
+  }
+
+  void _showServerSettingsDialog() {
+    final apiService = context.read<ApiService>();
+    final controller = TextEditingController(text: apiService.baseUrl);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.dns_rounded, color: AppColors.primary),
+            SizedBox(width: 8),
+            Text('Sunucu Bağlantısı', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Uygulamanın bağlanacağı FastAPI backend sunucu adresini yapılandırın:',
+              style: TextStyle(fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: 'API Base URL',
+                hintText: 'http://192.168.1.50:8000/api/v1',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '• Gerçek telefon için bilgisayarınızın Wi-Fi IP\'sini girin (örn: http://192.168.1.X:8000/api/v1)\n• Sunucu açmadan denemek için "Çevrimdışı Demo" butonunu kullanabilirsiniz.',
+              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              apiService.setBaseUrl(AppConfig.defaultApiBaseUrl);
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Varsayılan emülatör sunucusuna sıfırlandı.')),
+              );
+            },
+            child: const Text('Sıfırla'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newUrl = controller.text.trim();
+              if (newUrl.isNotEmpty) {
+                apiService.setBaseUrl(newUrl);
+                Navigator.pop(ctx);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Sunucu adresi güncellendi:\n$newUrl')),
+                );
+              }
+            },
+            child: const Text('Kaydet'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _submit() async {
@@ -64,10 +140,21 @@ class _LoginScreenState extends State<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_ethernet_rounded),
+            tooltip: 'Sunucu Bağlantı Ayarı',
+            onPressed: _showServerSettingsDialog,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -90,26 +177,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Text(
                     AppConfig.appName,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     AppConfig.tagline,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
-                  // Demo Quick Fill Chips
+                  // Demo / Instant Offline Experience Box
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkSurface : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: isDark ? AppColors.borderDark : AppColors.borderLight,
                       ),
@@ -117,35 +204,60 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.flash_on_rounded, color: AppColors.warning, size: 18),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Hızlı Demo Modu (Tek Tıkla Giriş):',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
                         Text(
-                          'Hızlı Demo Girişi (Tek Tık):',
+                          'Sunucu kurmaya gerek kalmadan tüm bina özelliklerini hemen telefonunuzda deneyebilirsiniz:',
                           style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
                             color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
+                        const SizedBox(height: 12),
+                        Row(
                           children: [
-                            ActionChip(
-                              avatar: const Icon(Icons.admin_panel_settings_rounded, size: 16),
-                              label: const Text('Yönetici (Kemal Y.)'),
-                              onPressed: () => _fillDemo('manager@rezidanspro.app', 'RezidansPro123!'),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  side: const BorderSide(color: AppColors.primary, width: 1.2),
+                                ),
+                                icon: const Icon(Icons.admin_panel_settings_rounded, size: 18),
+                                label: const Text('Yönetici Girişi', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                onPressed: auth.isLoading ? null : () => _loginDemo(true),
+                              ),
                             ),
-                            ActionChip(
-                              avatar: const Icon(Icons.person_rounded, size: 16),
-                              label: const Text('Sakin (Necati E.)'),
-                              onPressed: () => _fillDemo('resident@rezidanspro.app', 'RezidansPro123!'),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  side: const BorderSide(color: AppColors.secondary, width: 1.2),
+                                ),
+                                icon: const Icon(Icons.person_rounded, size: 18),
+                                label: const Text('Sakin Girişi', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                onPressed: auth.isLoading ? null : () => _loginDemo(false),
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // Error Banner
                   if (auth.errorMessage != null) ...[
@@ -216,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // Login Button
                   ElevatedButton(
@@ -229,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           )
                         : Text(l10n.login),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
                   // Register Link
                   Row(

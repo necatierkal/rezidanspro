@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/app_models.dart';
 import '../services/api_service.dart';
 import '../services/storage_service.dart';
+import '../services/mock_data_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final ApiService _api;
@@ -45,13 +46,13 @@ class AuthProvider extends ChangeNotifier {
         'password': password,
       });
 
-      final accessToken = res['access_token'] as String;
-      final refreshToken = res['refresh_token'] as String;
-      final userId = res['user_id'] as int;
-      final userEmail = res['email'] as String;
-      final role = res['role'] as String;
-      final firstName = res['first_name'] as String? ?? '';
-      final lastName = res['last_name'] as String? ?? '';
+      final accessToken = (res['access_token'] as String?) ?? 'demo_token';
+      final refreshToken = (res['refresh_token'] as String?) ?? 'demo_refresh';
+      final userId = (res['user_id'] as int?) ?? (res['user']?['id'] as int? ?? 1);
+      final userEmail = (res['email'] as String?) ?? (res['user']?['email'] as String? ?? email);
+      final role = (res['role'] as String?) ?? (res['user']?['role'] as String? ?? 'RESIDENT');
+      final firstName = (res['first_name'] as String?) ?? (res['user']?['first_name'] as String? ?? '');
+      final lastName = (res['last_name'] as String?) ?? (res['user']?['last_name'] as String? ?? '');
 
       await _storage.saveAuthData(
         accessToken: accessToken,
@@ -85,6 +86,44 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<bool> loginDemo({required bool asManager}) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    await _storage.setIsDemoMode(true);
+    MockDataService().isManagerMode = asManager;
+
+    final userId = asManager ? 1 : 2;
+    final email = asManager ? 'manager@rezidanspro.app' : 'resident@rezidanspro.app';
+    final role = asManager ? 'MANAGER' : 'RESIDENT';
+    final firstName = asManager ? 'Kemal' : 'Necati';
+    final lastName = asManager ? 'Yılmaz' : 'Erkal';
+
+    await _storage.saveAuthData(
+      accessToken: 'demo_access_token',
+      refreshToken: 'demo_refresh_token',
+      userId: userId,
+      email: email,
+      role: role,
+    );
+    await _storage.setSelectedCommunityId(1);
+
+    _currentUser = UserModel(
+      id: userId,
+      uuid: asManager ? 'u-mgr-001' : 'u-res-002',
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      isActive: true,
+      createdAt: DateTime.now(),
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    return true;
   }
 
   Future<bool> register({
